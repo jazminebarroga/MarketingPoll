@@ -9,7 +9,9 @@ import org.junit.Assert.*
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+class SmsParserUnitTest {
+
+    val SmsParser = com.jpbbarroga.marketingpoll.SmsParser()
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
