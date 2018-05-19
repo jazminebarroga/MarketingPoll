@@ -17,7 +17,8 @@ import java.util.jar.Manifest
 enum class Person(val firstName: String, val color: String, var numVotes: Int) {
     HANS("hans", "blue", 0),
     LEAN("lean", "blue", 0),
-    MIKKO("mikko", "blue", 0)
+    MIKKO("mikko", "blue", 0),
+    UNDETERMINED("none", "none", 0)
 }
 class MainActivity : AppCompatActivity() {
 
