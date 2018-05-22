@@ -11,16 +11,17 @@ class SmsParser {
         fun parseSms(sms: String): Pair<Person, String> {
             val strings = sms.split(" ", ignoreCase = true, limit = 3)
             var person: Person = Person.UNDETERMINED
-            if (strings[0].equals("BB", true)) {
-                if (strings[1].equals(Person.HANS.firstName, true)) {
+            var message = ""
+            if (strings.size >= 2 && strings[0].equals("BB", true)) {
+                val name = strings[1]
+                if (name.equals(Person.HANS.firstName, true)) {
                     person = Person.HANS
-                } else if (strings[1].equals(Person.LEAN.firstName, true)) {
+                } else if (name.equals(Person.LEAN.firstName, true)) {
                     person = Person.LEAN
-                } else if (strings[1].equals(Person.MIKKO.firstName, true)) {
+                } else if (name.equals(Person.MIKKO.firstName, true)) {
                     person = Person.MIKKO
                 }
             }
-            var message = ""
             if (strings.size == 3) {
                 message = strings[2]
             }

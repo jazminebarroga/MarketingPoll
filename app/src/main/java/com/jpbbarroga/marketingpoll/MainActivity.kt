@@ -111,8 +111,10 @@ class MainActivity : AppCompatActivity() {
 
         runOnUiThread {
             adapter.notifyDataSetChanged()
-            val flash = notif(dataPair)
-            flash.show()
+            if (dataPair.second.isNotEmpty()) {
+                val flash = notif(dataPair)
+                flash.show()
+            }
         }
     }
 
@@ -124,6 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun notif(dataPair: Pair<Person, String>): Flashbar {
+
        return  Flashbar.Builder(this)
                 .gravity(Flashbar.Gravity.TOP)
                 .title("+1 for " + dataPair.first.firstName)

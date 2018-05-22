@@ -71,4 +71,14 @@ class SmsParserUnitTest {
 
     }
 
+
+    @Test
+    fun shouldReturnUndetermined() {
+       val test1 = SmsParser.parseSms("afj234")
+        assertEquals(Person.UNDETERMINED, test1.first)
+        val test2 = SmsParser.parseSms("BB")
+        assertEquals(Person.UNDETERMINED, test2.first)
+
+    }
+
 }
