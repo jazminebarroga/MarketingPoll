@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MarketingPoll</string>
+    <string name="hans_firstname">Hans</string>
+    <string name="lean_firstname">Lean</string>
+    <string name="mikko_firstname">Mikko</string>
 </resources>

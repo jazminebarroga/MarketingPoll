@@ -1,10 +1,7 @@
 package com.jpbbarroga.marketingpoll
 
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
@@ -49,9 +46,14 @@ class MainActivity : AppCompatActivity() {
 
     private val data = arrayListOf<Person>(Person.HANS, Person.LEAN, Person.MIKKO)
 
+    private val PREFS_FILENAME = "com.jpbbarroga.marketingpoll.prefs"
+
+    private var prefs: SharedPreferences? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        readSharedPref()
         configureListView()
         configureReceiver()
 
@@ -67,13 +69,17 @@ class MainActivity : AppCompatActivity() {
             } else {
                 requestSmsPermission()
             }
-        } else {
-            readSms()
         }
 
-
-
     }
+
+    private fun readSharedPref() {
+        prefs = this.getSharedPreferences(PREFS_FILENAME, 0)
+        for (person in data) {
+            person.numVotes = prefs!!.getInt(person.firstName, 0)
+        }
+    }
+
 
     private fun configureListView() {
 
@@ -87,23 +93,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestSmsPermission() {
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_SMS), PERMISSIONS_REQUEST_READ_SMS)
-
-    }
-    fun readSms() {
-        val cursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
-
-        if (cursor!!.moveToFirst()) { // must check the result to prevent exception
-            do {
-                var msgData = ""
-                for (idx in 0 until cursor.columnCount) {
-                    msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx)
-
-                }
-                // use msgData
-            } while (cursor.moveToNext())
-        } else {
-            // empty box, no SMS
-        }
     }
 
     private fun parseSms(sms: String) {
@@ -182,7 +171,6 @@ class MainActivity : AppCompatActivity() {
                         val sms = SmsMessage.createFromPdu(onePdus as ByteArray)
 
                         parseSms(sms.messageBody)
-                       // Toast.makeText(cont, sms.messageBody.toString(), Toast.LENGTH_SHORT)
 
                     }
                }
@@ -193,9 +181,20 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(smsReceiver,  IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION))
     }
 
-    override fun onDestroy() {
-        unregisterReceiver(smsReceiver)
-        super.onDestroy()
+    private fun writeSharedPref() {
+        val editor = prefs!!.edit()
+
+        for (person in data) {
+            editor.putInt(person.firstName, person.numVotes)
+        }
+        editor.apply()
     }
+
+    override fun onStop() {
+        unregisterReceiver(smsReceiver)
+        writeSharedPref()
+        super.onStop()
+    }
+
 
 }
