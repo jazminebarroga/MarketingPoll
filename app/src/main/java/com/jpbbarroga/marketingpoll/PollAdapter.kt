@@ -54,6 +54,8 @@ class PollAdapter(private var activity: Activity, private var items: ArrayList<P
         viewHolder.seekBar!!.thumb = layerDrawable
         viewHolder.seekBar!!.progress = personDto.numVotes
 
+        //TODO setontouchlistener to disable touch
+
         return view as View
     }
 

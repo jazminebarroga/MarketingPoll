@@ -24,9 +24,9 @@ import java.util.jar.Manifest
 //data class Person(val name: String, val color: String, var numVotes: Int)
 
 enum class Person(val firstName: String, val thumb: Int, val color: String, var numVotes: Int) {
-    HANS("hans", R.drawable.liam, "blue", 0),
-    LEAN("lean", R.drawable.robert, "blue", 0),
-    MIKKO("mikko", R.drawable.chris, "blue", 0),
+    HANS("Hans", R.drawable.liam, "blue", 0),
+    LEAN("Lean", R.drawable.robert, "blue", 0),
+    MIKKO("Mikko", R.drawable.chris, "blue", 0),
     UNDETERMINED("none", -1, "none", 0)
 }
 
@@ -69,6 +69,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             readSms()
         }
+
+
 
     }
 
@@ -114,12 +116,45 @@ class MainActivity : AppCompatActivity() {
             Person.MIKKO -> {
                 data[2].numVotes += 1
             }
+            Person.UNDETERMINED -> {
+                return
+            }
 
         }
 
         runOnUiThread {
             adapter.notifyDataSetChanged()
+            val flash = notif(dataPair)
+            flash.show()
         }
+    }
+
+    private fun notif(dataPair: Pair<Person, String>): Flashbar {
+       return  Flashbar.Builder(this)
+                .gravity(Flashbar.Gravity.TOP)
+                .title("+1 for " + dataPair.first.firstName)
+                .message(dataPair.second)
+                .duration(3000)
+                .backgroundColorRes(R.color.colorPrimaryDark)
+                .showOverlay()
+                .showIcon()
+                .icon(R.drawable.robert)
+                .iconAnimation(FlashAnim.with(this)
+                        .animateIcon()
+                        .pulse()
+                        .alpha()
+                        .duration(750)
+                        .accelerate())
+                .enterAnimation(FlashAnim.with(this)
+                        .animateBar()
+                        .duration(750)
+                        .alpha()
+                        .overshoot())
+                .exitAnimation(FlashAnim.with(this)
+                        .animateBar()
+                        .duration(400)
+                        .accelerateDecelerate())
+                .build()
     }
 
     private fun configureReceiver() {
@@ -137,30 +172,15 @@ class MainActivity : AppCompatActivity() {
                         val sms = SmsMessage.createFromPdu(onePdus as ByteArray)
 
                         parseSms(sms.messageBody)
-                        Toast.makeText(cont, sms.messageBody.toString(), Toast.LENGTH_SHORT)
-                        Flashbar.Builder(this@MainActivity)
-                                .gravity(Flashbar.Gravity.BOTTOM)
-                                .title("HELLO WORLD")
-                                .message("YOU RECEIVED A NEW TEXT MESSAGE")
-                                .backgroundColorRes(R.color.colorAccent)
-                                .showOverlay().enterAnimation(FlashAnim.with(cont)
-                                .animateBar()
-                                .duration(750)
-                                .alpha()
-                                .overshoot())
-                                .exitAnimation(FlashAnim.with(cont)
-                                        .animateBar()
-                                        .duration(400)
-                                        .accelerateDecelerate())
-                                .build()
+                       // Toast.makeText(cont, sms.messageBody.toString(), Toast.LENGTH_SHORT)
+
                     }
                }
+
             }
         }
 
         registerReceiver(smsReceiver,  IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION))
-
-
     }
 
     override fun onDestroy() {
