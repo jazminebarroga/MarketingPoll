@@ -13,6 +13,7 @@ import android.provider.Telephony
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.telephony.SmsMessage
+import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.SeekBar
@@ -23,11 +24,11 @@ import java.util.jar.Manifest
 
 //data class Person(val name: String, val color: String, var numVotes: Int)
 
-enum class Person(val firstName: String, val thumb: Int, val color: String, var numVotes: Int) {
-    HANS("Hans", R.drawable.liam, "blue", 0),
-    LEAN("Lean", R.drawable.robert, "blue", 0),
-    MIKKO("Mikko", R.drawable.chris, "blue", 0),
-    UNDETERMINED("none", -1, "none", 0)
+enum class Person(val firstName: String, val thumb: Int, val color: Int, var numVotes: Int) {
+    HANS("Hans", R.drawable.liam, R.color.blueMaterial, 0),
+    LEAN("Lean", R.drawable.robert, R.color.violetMaterial, 0),
+    MIKKO("Mikko", R.drawable.chris, R.color.orangeMaterial, 0),
+    UNDETERMINED("none", -1, -1, 0)
 }
 
 class MainActivity : AppCompatActivity() {
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
     private fun configureListView() {
 
         listView = findViewById<ListView>(R.id.poll_list_view)
+        addFooter()
         adapter = PollAdapter(this, data)
         listView.adapter = adapter
         adapter.notifyDataSetChanged()
@@ -129,6 +131,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun addFooter() {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.footer_view, null)
+
+        listView.addFooterView(view)
+    }
+
     private fun notif(dataPair: Pair<Person, String>): Flashbar {
        return  Flashbar.Builder(this)
                 .gravity(Flashbar.Gravity.TOP)
@@ -138,7 +147,8 @@ class MainActivity : AppCompatActivity() {
                 .backgroundColorRes(R.color.colorPrimaryDark)
                 .showOverlay()
                 .showIcon()
-                .icon(R.drawable.robert)
+
+                .icon(R.drawable.chris)
                 .iconAnimation(FlashAnim.with(this)
                         .animateIcon()
                         .pulse()

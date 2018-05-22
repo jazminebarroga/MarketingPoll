@@ -42,6 +42,7 @@ class PollAdapter(private var activity: Activity, private var items: ArrayList<P
       //  viewHolder.txtName?.text = userDto.name
 
         viewHolder.seekBar!!.max = 10
+  //      viewHolder.seekBar.progressTintList(arrayOf(personDto.color)) TODO change color
 
 
         val layerDrawable = activity?.getDrawable(R.drawable.custom_thumb) as? LayerDrawable
