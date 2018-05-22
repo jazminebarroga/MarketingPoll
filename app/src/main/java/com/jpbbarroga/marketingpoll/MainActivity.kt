@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat
 import android.telephony.SmsMessage
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.SeekBar
 import android.widget.Toast
 import com.andrognito.flashbar.Flashbar
 import com.andrognito.flashbar.anim.FlashAnim
@@ -22,23 +23,30 @@ import java.util.jar.Manifest
 
 //data class Person(val name: String, val color: String, var numVotes: Int)
 
-enum class Person(val firstName: String, val color: String, var numVotes: Int) {
-    HANS("hans", "blue", 0),
-    LEAN("lean", "blue", 0),
-    MIKKO("mikko", "blue", 0),
-    UNDETERMINED("none", "none", 0)
+enum class Person(val firstName: String, val thumb: Int, val color: String, var numVotes: Int) {
+    HANS("hans", R.drawable.liam, "blue", 0),
+    LEAN("lean", R.drawable.robert, "blue", 0),
+    MIKKO("mikko", R.drawable.chris, "blue", 0),
+    UNDETERMINED("none", -1, "none", 0)
 }
+
 class MainActivity : AppCompatActivity() {
+
+    private var seekbarView: SeekBar? = null
 
     private lateinit var smsReceiver: BroadcastReceiver
 
     private lateinit var listView: ListView
+
+    private lateinit var adapter: PollAdapter
 
     private var totalVotes: Int = 0
 
     private val MAX_VOTES = 20
 
     private val PERMISSIONS_REQUEST_READ_SMS = 999
+
+    private val data = arrayListOf<Person>(Person.HANS, Person.LEAN, Person.MIKKO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,25 +69,17 @@ class MainActivity : AppCompatActivity() {
         } else {
             readSms()
         }
+
     }
 
     private fun configureListView() {
 
         listView = findViewById<ListView>(R.id.poll_list_view)
-        val adapter = PollAdapter(this, generateData())
+        adapter = PollAdapter(this, data)
         listView.adapter = adapter
         adapter.notifyDataSetChanged()
     }
 
-    private fun generateData(): ArrayList<Person> {
-        var result = ArrayList<Person>()
-
-        result.add(Person.HANS)
-        result.add(Person.LEAN)
-        result.add(Person.MIKKO)
-
-        return result
-    }
 
     private fun requestSmsPermission() {
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_SMS), PERMISSIONS_REQUEST_READ_SMS)
@@ -102,6 +102,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun parseSms(sms: String) {
+        val dataPair = SmsParser.parseSms(sms)
+        when (dataPair.first) {
+            Person.HANS ->  {
+                data[0].numVotes += 1
+            }
+            Person.LEAN -> {
+                data[1].numVotes += 1
+            }
+            Person.MIKKO -> {
+                data[2].numVotes += 1
+            }
+
+        }
+
+        runOnUiThread {
+            adapter.notifyDataSetChanged()
+        }
+    }
+
     private fun configureReceiver() {
 
         smsReceiver = object: BroadcastReceiver() {
@@ -114,11 +134,10 @@ class MainActivity : AppCompatActivity() {
                 if (smsBundle != null) {
                     val pdus = smsBundle.get("pdus") as Array<Any>
                     for (onePdus : Any in pdus) {
-//                        val oneSMS = SmsMessage.createFromPdu(onePdus as ByteArray)
-//                        str += "SMS from " +oneSMS.originatingAddress
-//                        str += " :"
-//                        str += oneSMS.messageBody.toString()
-//                        str += "\n"
+                        val sms = SmsMessage.createFromPdu(onePdus as ByteArray)
+
+                        parseSms(sms.messageBody)
+                        Toast.makeText(cont, sms.messageBody.toString(), Toast.LENGTH_SHORT)
                         Flashbar.Builder(this@MainActivity)
                                 .gravity(Flashbar.Gravity.BOTTOM)
                                 .title("HELLO WORLD")
@@ -148,4 +167,5 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(smsReceiver)
         super.onDestroy()
     }
+
 }

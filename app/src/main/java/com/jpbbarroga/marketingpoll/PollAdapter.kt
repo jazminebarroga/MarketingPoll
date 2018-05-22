@@ -2,6 +2,7 @@ package com.jpbbarroga.marketingpoll
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.LayerDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ class PollAdapter(private var activity: Activity, private var items: ArrayList<P
 
         init {
             this.seekBar = row?.findViewById<SeekBar>(R.id.seekBar)
+
         }
     }
 
@@ -33,13 +35,29 @@ class PollAdapter(private var activity: Activity, private var items: ArrayList<P
         } else {
             view = convertView
             viewHolder = view.tag as ViewHolder
+
         }
 
-        var userDto = items[position]
-       // viewHolder.txtName?.text = userDto.name
+        var personDto = items[position]
+      //  viewHolder.txtName?.text = userDto.name
+
+        viewHolder.seekBar!!.max = 10
+
+
+        val layerDrawable = activity?.getDrawable(R.drawable.custom_thumb) as? LayerDrawable
+        val replace = activity?.getDrawable(personDto.thumb)
+
+        val test = layerDrawable!!.setDrawableByLayerId(R.id.thumb_image, replace)
+
+
+
+        viewHolder.seekBar!!.thumb = layerDrawable
+        viewHolder.seekBar!!.progress = personDto.numVotes
 
         return view as View
     }
+
+
 
     override fun getItem(i: Int): Person {
         return items[i]
