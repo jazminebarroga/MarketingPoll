@@ -1,9 +1,8 @@
 package com.jpbbarroga.marketingpoll
 
-import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
-import android.net.Uri
+import android.graphics.PorterDuff
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Telephony
@@ -11,13 +10,10 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.telephony.SmsMessage
 import android.view.LayoutInflater
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.SeekBar
-import android.widget.Toast
 import com.andrognito.flashbar.Flashbar
 import com.andrognito.flashbar.anim.FlashAnim
-import java.util.jar.Manifest
 
 //data class Person(val name: String, val color: String, var numVotes: Int)
 
@@ -40,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private var totalVotes: Int = 0
 
-    private val MAX_VOTES = 20
+    private val MAX_VOTES = 30
 
     private val PERMISSIONS_REQUEST_READ_SMS = 999
 
@@ -131,13 +127,11 @@ class MainActivity : AppCompatActivity() {
        return  Flashbar.Builder(this)
                 .gravity(Flashbar.Gravity.TOP)
                 .title("+1 for " + dataPair.first.firstName)
-                .message(dataPair.second)
+                .message("\"" + dataPair.second + "\"")
                 .duration(3000)
-                .backgroundColorRes(R.color.colorPrimaryDark)
-                .showOverlay()
-                .showIcon()
-
-                .icon(R.drawable.chris)
+                .backgroundColorRes(R.color.flashbarColor)
+                .showIcon(0.8f)
+                .icon(R.drawable.like)
                 .iconAnimation(FlashAnim.with(this)
                         .animateIcon()
                         .pulse()
@@ -191,9 +185,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        unregisterReceiver(smsReceiver)
         writeSharedPref()
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(smsReceiver)
+        super.onDestroy()
     }
 
 

@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:background="@color/footerColor">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Vote for the Next Century Tuna SuperBods  BB (space) Name of Contestant (space) Message
-            ie BB DAVE MY NEXT SUPERBODS WINNER"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:text="Just Text BB (space) Name of Contestant (space) Message then send to 09053088989
+            "
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:textColor="@color/white"
+        android:paddingBottom="5dp"
+
+        android:text="BB HANS Bat ikaw ang nasa isip ko?"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:textColor="@color/white"
+        android:paddingBottom="5dp"
+
+        android:text="BB LEAN IKAW NA ANG MR. RIGHT!!"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:textColor="@color/white"
+    android:paddingBottom="5dp"
+        android:text="BB MIKKO Ang bebe nating lahat!"/>
 </LinearLayout>
