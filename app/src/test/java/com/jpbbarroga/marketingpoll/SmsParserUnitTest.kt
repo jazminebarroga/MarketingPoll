@@ -46,7 +46,7 @@ class SmsParserUnitTest {
         assertEquals(Person.LEAN, test3.first)
         assertEquals("HELLO WORLD", test3.second)
 
-        val test4 = SmsParser.parseSms("bB leAn e0w ph0uz  ")
+        val test4 = SmsParser.parseSms(" bB leAn e0w ph0uz  ")
         assertEquals(Person.LEAN, test4.first)
         assertEquals("e0w ph0uz", test4.second)
     }
@@ -65,7 +65,7 @@ class SmsParserUnitTest {
         assertEquals(Person.MIKKO, test3.first)
         assertEquals("HELLO WORLD", test3.second)
 
-        val test4 = SmsParser.parseSms("bB mikkO e0w ph0uz  ")
+        val test4 = SmsParser.parseSms(" bB mikkO e0w ph0uz  ")
         assertEquals(Person.MIKKO, test4.first)
         assertEquals("e0w ph0uz", test4.second)
 
@@ -74,11 +74,12 @@ class SmsParserUnitTest {
 
     @Test
     fun shouldReturnUndetermined() {
-       val test1 = SmsParser.parseSms("afj234")
+        val test1 = SmsParser.parseSms("afj234")
         assertEquals(Person.UNDETERMINED, test1.first)
         val test2 = SmsParser.parseSms("BB")
         assertEquals(Person.UNDETERMINED, test2.first)
-
+        val test3 = SmsParser.parseSms("CC MIKKO EOW")
+        assertEquals(Person.UNDETERMINED, test3.first)
     }
 
 }

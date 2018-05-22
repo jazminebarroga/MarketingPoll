@@ -9,7 +9,8 @@ class SmsParser {
 
     companion object {
         fun parseSms(sms: String): Pair<Person, String> {
-            val strings = sms.split(" ", ignoreCase = true, limit = 3)
+
+            val strings = sms.trim().split(" ", ignoreCase = true, limit = 3)
             var person: Person = Person.UNDETERMINED
             var message = ""
             if (strings.size >= 2 && strings[0].equals("BB", true)) {
